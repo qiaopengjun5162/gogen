@@ -1,0 +1,108 @@
+name: build
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - v*
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  build-go:
+    strategy:
+      matrix:
+        platform: [ubuntu-latest]
+    runs-on: ${{ matrix.platform }}
+    steps:
+      # Checkout the code
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: recursive
+
+      # Set up Go environment
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: '1.24.0'  # Specify the Go version you want to use
+
+      # Cache Go modules
+      - name: Cache Go modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.mod', '**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+
+      # Install dependencies
+      - name: Install dependencies
+        run: |
+          go mod tidy
+          go mod download
+
+      # Install golangci-lint
+      - name: Install golangci-lint
+        run: go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.64.5
+
+      # Check Go code formatting
+      - name: Check code format
+        run: |
+          if [ -n "$(gofmt -l .)" ]; then
+            echo "Go code is not formatted. Run 'go fmt ./...' locally."
+            exit 1
+          fi
+
+      # Lint Go sources
+      - name: Lint Go sources
+        run: golangci-lint run ./...
+
+      # Run Go tests
+      - name: Run Go tests
+        run: go test -v ./...
+
+      # Build Go binary
+      - name: Build Go binary
+        run: go build -v ./...
+
+      # Generate changelog (only on tag push)
+      - name: Ensure CHANGELOG.md exists
+        if: startsWith(github.ref, 'refs/tags/')
+        run: touch CHANGELOG.md
+
+      - name: Generate a changelog
+        uses: orhun/git-cliff-action@v2
+        id: git-cliff
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          config: cliff.toml
+          args: -vv --latest --strip header --prepend=CHANGELOG.md
+
+      - name: Debug changelog
+        if: startsWith(github.ref, 'refs/tags/')
+        run: cat CHANGELOG.md
+
+      - name: Commit updated CHANGELOG.md
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add CHANGELOG.md
+          git commit -m "Update CHANGELOG.md [skip ci]" || echo "Nothing to commit"
+          git push origin main || echo "Push failed"
+
+      # Create GitHub Release
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          body_path: ${{ github.workspace }}/CHANGELOG.md

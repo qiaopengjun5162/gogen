@@ -1,0 +1,14 @@
+# Go 文件
+*.go @qiaopengjun5162
+
+# 配置文件
+*.yml @qiaopengjun5162
+*.yaml @qiaopengjun5162
+*.json @qiaopengjun5162
+
+# 项目根目录文件
+/go.mod @qiaopengjun5162
+/go.sum @qiaopengjun5162
+
+# GitHub 相关文件
+/.github/ @qiaopengjun5162

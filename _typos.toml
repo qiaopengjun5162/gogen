@@ -1,0 +1,9 @@
+[default.extend-words]
+
+[files]
+extend-exclude = [
+    "CHANGELOG.md",
+    "notebooks/*",
+    ".idea",
+    ".vscode",
+]

@@ -1,0 +1,58 @@
+fail_fast: false
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-byte-order-marker
+      - id: check-case-conflict
+      - id: check-merge-conflict
+      - id: check-symlinks
+      - id: check-yaml
+        types: [yaml]
+      - id: check-toml
+        types: [toml]
+      - id: check-json
+        types: [ json ]
+      - id: end-of-file-fixer
+      - id: mixed-line-ending
+      - id: trailing-whitespace
+      - id: check-added-large-files  # 防止提交大文件。(默认检测阈值为 500KB)
+        args: ["--maxkb=200"]
+      - id: detect-private-key
+  - repo: https://github.com/psf/black
+    rev: 25.1.0
+    hooks:
+      - id: black
+  - repo: https://github.com/dnephin/pre-commit-golang
+    rev: v0.5.0
+    hooks:
+      - id: go-fmt
+        types: [go]
+      - id: go-imports
+        types: [go]
+#      - id: no-go-testing
+      - id: golangci-lint
+        files: \.go$
+      - id: go-unit-tests
+        args: [ "-short", "./..." ]
+      - id: go-cyclo
+        args: [ "-over=15" ]  # 复杂度超过 15 时警告
+      - id: go-build
+      - id: go-mod-tidy
+  - repo: https://github.com/alessandrojcm/commitlint-pre-commit-hook
+    rev: v8.0.0
+    hooks:
+      - id: commitlint
+        stages: [ commit-msg ]
+        additional_dependencies: [ '@commitlint/config-conventional' ]
+        args: ["--config", ".commitlintrc.js"]
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.10.0.1
+    hooks:
+      - id: shellcheck
+        types: [ shell ]
+  - repo: https://github.com/hadolint/hadolint
+    rev: v2.12.0
+    hooks:
+      - id: hadolint
+        types: [dockerfile]

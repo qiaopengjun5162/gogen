@@ -1,0 +1,80 @@
+run:
+  # timeout for analysis, e.g. 30s, 3m, default is 1m
+  timeout: 3m
+  # exclude test files
+  tests: false
+
+linters:
+  disable-all: false
+  enable:
+    # bugs/error
+    - staticcheck
+    - gosec
+    - errcheck
+    - govet
+
+    # performance
+    - prealloc
+
+    # style, formatting
+    - gofmt
+    - goconst
+    - unconvert
+    - misspell
+    - unparam # 检测未使用的函数参数
+    - nakedret # 检查裸返回
+    - tagliatelle # 检查 struct tag 格式
+    - ineffassign
+    - revive
+    - dupl
+
+linters-settings:
+  gofmt:
+    rewrite-rules:
+      - pattern: 'interface{}'
+        replacement: 'any'
+      - pattern: 'a[b:len(a)]'
+        replacement: 'a[b:]'
+
+  misspell:
+    locale: US
+
+  errcheck:
+    check-type-assertions: true
+  dupl:
+    # Tokens count to trigger issue, Default: 150
+    threshold: 100
+  govet:
+    enable:
+      - atomic
+      - bools
+      - nilfunc
+      - printf
+    disable:
+      - unreachable
+  revive:
+    # 调整 revive 规则，减少严格性
+    rules:
+      - name: package-comments
+        disabled: true
+      - name: receiver-naming
+        disabled: true
+      - name: exported
+        disabled: true
+
+
+issues:
+  max-same-issues: 0
+  max-issues-per-linter: 0
+  exclude-use-default: false
+  exclude:
+    # gosec: Duplicated errcheck checks
+    - G104
+    - G204
+    - "could not import github.com/ethereum/go-ethereum/version"  # 忽略导入错误
+
+  exclude-rules:
+    - path: cmd/signature/cli.go              # 针对特定文件忽略
+      linters:
+        - govet
+        - typecheck

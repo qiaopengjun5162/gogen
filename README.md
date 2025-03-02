@@ -1,7 +1,7 @@
 # gogen
 
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/yourusername/gogen)
-![GitHub license](https://img.shields.io/github/license/yourusername/gogen)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/qiaopengjun5162/gogen)
+![GitHub license](https://img.shields.io/github/license/qiaopengjun5162/gogen)
 ![Go Version](https://img.shields.io/badge/go-%3E%3D1.24-blue)
 
 ## Chinese Documentation

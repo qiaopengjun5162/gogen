@@ -3,11 +3,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 ---
-## [unreleased]
+## [0.1.1-gogen-release](https://github.com/qiaopengjun5162/gogen/compare/v0.1.0-gogen..v0.1.1-gogen-release) - 2025-03-02
 
 ### Miscellaneous Chores
 
 - update github repo url in readme - ([7ef027a](https://github.com/qiaopengjun5162/gogen/commit/7ef027ae8208d6330293372cf2fe85ceaa455750)) - QiaoPengjun5162
+- Add cross-platform executable build and release - ([8d9947f](https://github.com/qiaopengjun5162/gogen/commit/8d9947f0eb62cc3504095d98ab2c044fcd04aec1)) - QiaoPengjun5162
 
 ---
 ## [0.1.0-gogen] - 2025-03-02

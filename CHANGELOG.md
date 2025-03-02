@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file. See [conven
 ---
 ## [unreleased]
 
+### Miscellaneous Chores
+
+- update github repo url in readme - ([7ef027a](https://github.com/qiaopengjun5162/gogen/commit/7ef027ae8208d6330293372cf2fe85ceaa455750)) - QiaoPengjun5162
+
+---
+## [0.1.0-gogen] - 2025-03-02
+
 ### Features
 
 - gogen project finished - ([95041ad](https://github.com/qiaopengjun5162/gogen/commit/95041adb4bb0dbae7520dc9e799c38342af0df21)) - QiaoPengjun5162
@@ -12,6 +19,7 @@ All notable changes to this project will be documented in this file. See [conven
 ### Miscellaneous Chores
 
 - init the project - ([c635fe0](https://github.com/qiaopengjun5162/gogen/commit/c635fe0c0a0f67059df7ddd702d5e06fda9ec8c9)) - QiaoPengjun5162
+- change log - ([fc305c0](https://github.com/qiaopengjun5162/gogen/commit/fc305c091a512cee0be151df5cb14e972b7ce267)) - QiaoPengjun5162
 
 ### Other
 

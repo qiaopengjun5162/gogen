@@ -3,15 +3,7 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 ---
-## [0.1.1-gogen-release](https://github.com/qiaopengjun5162/gogen/compare/v0.1.0-gogen..v0.1.1-gogen-release) - 2025-03-02
-
-### Miscellaneous Chores
-
-- update github repo url in readme - ([7ef027a](https://github.com/qiaopengjun5162/gogen/commit/7ef027ae8208d6330293372cf2fe85ceaa455750)) - QiaoPengjun5162
-- Add cross-platform executable build and release - ([8d9947f](https://github.com/qiaopengjun5162/gogen/commit/8d9947f0eb62cc3504095d98ab2c044fcd04aec1)) - QiaoPengjun5162
-
----
-## [0.1.0-gogen] - 2025-03-02
+## [unreleased]
 
 ### Features
 
@@ -21,6 +13,9 @@ All notable changes to this project will be documented in this file. See [conven
 
 - init the project - ([c635fe0](https://github.com/qiaopengjun5162/gogen/commit/c635fe0c0a0f67059df7ddd702d5e06fda9ec8c9)) - QiaoPengjun5162
 - change log - ([fc305c0](https://github.com/qiaopengjun5162/gogen/commit/fc305c091a512cee0be151df5cb14e972b7ce267)) - QiaoPengjun5162
+- update github repo url in readme - ([7ef027a](https://github.com/qiaopengjun5162/gogen/commit/7ef027ae8208d6330293372cf2fe85ceaa455750)) - QiaoPengjun5162
+- Add cross-platform executable build and release - ([8d9947f](https://github.com/qiaopengjun5162/gogen/commit/8d9947f0eb62cc3504095d98ab2c044fcd04aec1)) - QiaoPengjun5162
+- Fix GOOS for macOS: change macos to darwin - ([7e2d44d](https://github.com/qiaopengjun5162/gogen/commit/7e2d44d65f2fdf25fb07dc729dddf4f945e55988)) - QiaoPengjun5162
 
 ### Other
 

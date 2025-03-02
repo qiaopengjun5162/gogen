@@ -17,7 +17,7 @@ jobs:
   build-go:
     strategy:
       matrix:
-        platform: [ubuntu-latest]
+        platform: [ ubuntu-latest ]
     runs-on: ${{ matrix.platform }}
     steps:
       # Checkout the code
@@ -101,11 +101,11 @@ jobs:
           git push origin main || echo "Push failed"
 
       # Create GitHub Release
-#      - name: Release
-#        uses: softprops/action-gh-release@v2
-#        if: startsWith(github.ref, 'refs/tags/')
-#        with:
-#          body_path: ${{ github.workspace }}/CHANGELOG.md
+  #      - name: Release
+  #        uses: softprops/action-gh-release@v2
+  #        if: startsWith(github.ref, 'refs/tags/')
+  #        with:
+  #          body_path: ${{ github.workspace }}/CHANGELOG.md
 
   build-assets:
     needs: build-go  # 依赖 build-go，确保代码检查通过
@@ -135,14 +135,14 @@ jobs:
 
       - name: Build executable
         run: |
-          GOOS=${{ matrix.target }} GOARCH=amd64 go build -o gogen${{ matrix.ext }} -ldflags "-X main.GitCommit=$(git rev-parse --short HEAD)" ./main.go
+          GOOS=${{ matrix.target }} GOARCH=amd64 go build -o gogen-${{ matrix.target }}${{ matrix.ext }} -ldflags "-X main.GitCommit=$(git rev-parse --short HEAD)" ./main.go
         shell: bash
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: gogen-${{ matrix.target }}
-          path: gogen${{ matrix.ext }}
+          path: gogen-${{ matrix.target }}${{ matrix.ext }}
 
   release:
     needs: build-assets  # 依赖 build-assets，确保可执行文件生成
@@ -162,6 +162,6 @@ jobs:
         with:
           body_path: ${{ github.workspace }}/CHANGELOG.md
           files: |
-            artifacts/gogen-linux/gogen
-            artifacts/gogen-windows/gogen.exe
-            artifacts/gogen-darwin/gogen
+            artifacts/gogen-linux/gogen-linux
+            artifacts/gogen-windows/gogen-windows.exe
+            artifacts/gogen-darwin/gogen-darwin

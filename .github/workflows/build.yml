@@ -136,6 +136,11 @@ jobs:
       - name: Build executable
         run: |
           GOOS=${{ matrix.target }} GOARCH=amd64 go build -o gogen-${{ matrix.target }}${{ matrix.ext }} -ldflags "-X main.GitCommit=$(git rev-parse --short HEAD)" ./main.go
+          if [ "${{ matrix.os }}" != "windows-latest" ]; then chmod +x gogen-${{ matrix.target }}${{ matrix.ext }}; fi
+        shell: bash
+
+      - name: Check permissions
+        run: ls -l gogen-${{ matrix.target }}${{ matrix.ext }} || dir gogen-${{ matrix.target }}${{ matrix.ext }}
         shell: bash
 
       - name: Upload artifact

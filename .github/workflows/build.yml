@@ -162,6 +162,13 @@ jobs:
         with:
           path: artifacts
 
+      - name: Check downloaded artifact permissions
+        run: |
+          ls -l artifacts/gogen-linux/gogen-linux
+          ls -l artifacts/gogen-darwin/gogen-darwin
+          ls -l artifacts/gogen-windows/gogen-windows.exe || echo "Windows file"
+        shell: bash
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:

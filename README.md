@@ -1,4 +1,7 @@
 # gogen
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-0-orange.svg?style=flat-square)](#contributors-)
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/qiaopengjun5162/gogen)
 ![GitHub license](https://img.shields.io/github/license/qiaopengjun5162/gogen)
@@ -34,15 +37,19 @@ gogen --git=https://github.com/example/template
 ### Installation
 
 1. **Using Go**:
+
    ```bash
    go install github.com/yourusername/gogen@latest
    ```
+
 2. **Manual Build**:
+
    ```bash
    git clone https://github.com/yourusername/gogen.git
    cd gogen
    go build -v -ldflags "-X main.GitCommit=$(git rev-parse --short HEAD)" -o gogen ./main.go
    ```
+
    This embeds the Git commit hash into the binary, visible when running the tool.
 
 ### Usage
@@ -134,10 +141,8 @@ pull requests, or improve the project.
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable -->
-
 <!-- markdownlint-restore -->
 <!-- prettier-ignore-end -->
-
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 ### License

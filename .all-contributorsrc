@@ -9,7 +9,17 @@
   "imageSize": 100,
   "commit": true,
   "commitConvention": "gitmoji",
-  "contributors": [],
+  "contributors": [
+    {
+      "login": "qiaopengjun5162",
+      "name": "Paxon Qiao 乔鹏军",
+      "avatar_url": "https://avatars.githubusercontent.com/u/124650229?v=4",
+      "profile": "https://github.com/qiaopengjun5162",
+      "contributions": [
+        "content"
+      ]
+    }
+  ],
   "contributorsPerLine": 7,
   "linkToUsage": true
 }

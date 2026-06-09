@@ -2,6 +2,27 @@
 
 ## 2026-06-09
 
+### Production-Grade Workflow Rules
+
+Changed:
+
+- Added `PRODUCTION.md` as the standing checklist for production-grade changes.
+- Updated `AGENTS.md` with a production standard:
+  - Treat the project as a production CLI.
+  - Require tests or an explicit recorded reason when behavior changes.
+  - Keep user-facing docs, change records, and workflow files in sync.
+  - Run or record the production gate before committing.
+- Clarified that blockers, missing local tools, and `--no-verify` commits must be recorded with the manual verification used.
+
+Validation:
+
+- Documentation-only change reviewed with `git diff`.
+
+Problems and resolutions:
+
+- Problem: The project had change-recording rules but no explicit production readiness checklist.
+  Resolution: Added `PRODUCTION.md` and linked the production gate from `AGENTS.md`.
+
 ### Modular CLI and Automation Flags
 
 Changed:

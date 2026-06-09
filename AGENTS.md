@@ -13,6 +13,15 @@
 - Build: `GOCACHE=/private/tmp/gogen-go-cache GOMODCACHE=/private/tmp/gogen-go-mod-cache go build ./...`
 - Release-style build: `go build -v -ldflags "-X main.GitCommit=$(git rev-parse --short HEAD)" -o gogen .`
 
+## Production Standard
+
+- Treat `gogen` as a production CLI, not a demo or throwaway scaffold.
+- Every behavior change must have tests or a recorded reason why automated coverage is not practical.
+- Any user-facing flag, output, error message, build command, release workflow, or template-processing behavior must be reflected in `README.md`, `README.zh.md`, `DEVLOG.md`, and `PRODUCTION.md` when relevant.
+- Prefer small, complete changes that can be formatted, tested, committed, and pushed in the same session.
+- Do not leave known broken workflows undocumented. If a local tool is missing, record the exact blocker and the manual verification used instead.
+- Before commit, run the production gate in `PRODUCTION.md` or record which parts could not run and why.
+
 ## Implementation Notes
 
 - Build the package with `go build .`, not `go build ./main.go`; the CLI is now modular.

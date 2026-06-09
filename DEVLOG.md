@@ -2,6 +2,29 @@
 
 ## 2026-06-09
 
+### Release Workflow Clarification
+
+Changed:
+
+- Confirmed that `.github/workflows/build.yml` automatically builds Linux, macOS, and Windows assets on `v*` tag pushes.
+- Confirmed that `softprops/action-gh-release@v2` finds an existing release and overwrites assets with matching names.
+- Made release publishing explicitly set `make_latest: true`.
+- Added `fail_on_unmatched_files: true` so missing release assets fail the workflow.
+- Updated `AGENTS.md` with the durable release workflow behavior.
+
+Validation:
+
+- `gh run view 27189248948 --json status,conclusion,event,headBranch,headSha,jobs`
+- `gh run view 27189248948 --log`
+- `gh release view v0.1.1-gogen-release`
+
+Problems and resolutions:
+
+- Problem: It was unclear whether refreshing `v0.1.1-gogen-release` required manual asset upload or whether CI/CD already handled it.
+  Resolution: Verified that the tag push workflow completed `build-assets` and `release`, deleted the previous assets, uploaded fresh assets, and left the release marked Latest. The workflow now declares Latest behavior explicitly.
+- Problem: Manual release notes can be overwritten by the tag workflow because the release job uses `CHANGELOG.md` as `body_path`.
+  Resolution: Recorded the behavior here and in `AGENTS.md`; edit `CHANGELOG.md` or change the workflow if custom release notes should persist.
+
 ### v0.1.1 Release Refresh
 
 Changed:

@@ -22,3 +22,9 @@
 - Local template copying intentionally skips `.git` directories.
 - Template variable replacement intentionally skips `.git` directories and binary files.
 - Keep tests focused on CLI behavior and filesystem effects before adding new features.
+
+## Change Recording
+
+- Update `DEVLOG.md` whenever code, documentation, configuration, build scripts, or release workflow files change.
+- Each record should include the concrete files or areas changed, validation commands, problems encountered, and how they were resolved.
+- If a commit uses `--no-verify`, record the exact hook blocker and the checks that were run manually.

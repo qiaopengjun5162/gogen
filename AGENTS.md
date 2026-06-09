@@ -28,12 +28,14 @@
 
 - Build the package with `go build .`, not `go build ./main.go`; the CLI is now modular.
 - `justfile` is the canonical developer task entrypoint; keep `Makefile` as a thin compatibility wrapper only.
+- `justfile` intentionally unsets `GOROOT` for Go commands so stale GVM settings cannot mismatch the active Go binary.
 - `--local` must preserve the provided template path in `Config.TemplateSrc`.
 - `--name` sets `Config.ProjectName`; `--yes` and `-y` skip confirmation prompts.
 - `--var key=value` can be repeated for custom template variables; `project_name` is reserved.
 - `--version` must not require `--git` or `--local`.
 - Local template copying intentionally skips `.git` directories.
 - Template variable replacement intentionally skips `.git` directories and binary files.
+- PR CI jobs must not reference tag-only container actions; GitHub can prepare container actions before evaluating step-level conditions.
 - Keep tests focused on CLI behavior and filesystem effects before adding new features.
 
 ## Change Recording

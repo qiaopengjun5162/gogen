@@ -2,6 +2,25 @@
 
 ## 2026-06-09
 
+### PR Workflow CI Fix
+
+Changed:
+
+- Removed the broken `orhun/git-cliff-action@v2` changelog generation steps from the `build-go` CI job.
+- Release creation now uses the checked-in `CHANGELOG.md` directly.
+- Added an `AGENTS.md` note that PR CI jobs must not reference tag-only container actions.
+
+Validation:
+
+- `just check`
+- `make check`
+- GitHub PR check after push.
+
+Problems and resolutions:
+
+- Problem: PR #3 failed before Go checks because GitHub tried to build the `orhun/git-cliff-action@v2` container action even though the changelog step had a tag-only `if` condition. The action image uses Debian buster apt sources that now return 404.
+  Resolution: Removed the container action from the PR job path and rely on the repository-maintained `CHANGELOG.md` for release notes.
+
 ### Justfile Task Runner
 
 Changed:
@@ -20,6 +39,8 @@ Problems and resolutions:
 
 - Problem: `Makefile` works, but it is more awkward as a long-term developer command interface for a focused CLI project.
   Resolution: Added `justfile` for clearer tasks while preserving `make` compatibility.
+- Problem: The active Go binary was Homebrew Go 1.26.3, but the shell still exported `GOROOT=/Users/qiaopengjun/.gvm/gos/go1.21`, causing `compile: version "go1.21.0" does not match go tool version "go1.26.3"` during `just check`.
+  Resolution: Updated `justfile` Go commands to run through `/usr/bin/env -u GOROOT ... go ...`, so stale GVM toolchain settings cannot poison the production gate.
 
 ### Production Quality Gate
 

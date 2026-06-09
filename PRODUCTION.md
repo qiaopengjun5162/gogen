@@ -55,6 +55,7 @@ Update these files when relevant:
 - Do not keep duplicate implementations of the same CLI behavior.
 - Keep `justfile` as the canonical local task runner; `Makefile` is a compatibility wrapper.
 - Keep Go task commands isolated from stale shell toolchain settings such as an old `GOROOT`.
+- Keep `main` protected: require pull requests, require `build-go (ubuntu-latest)`, forbid force pushes, forbid deletions, require linear history, and require resolved conversations.
 - Commit only coherent, reviewable changes.
 - Push completed commits when the user asks to continue shared work on the remote branch.
 - If `--no-verify` is necessary, record the hook failure and manual checks in `DEVLOG.md`.

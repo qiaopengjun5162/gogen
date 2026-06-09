@@ -74,39 +74,6 @@ jobs:
       - name: Build Go binary
         run: go build -v ./...
 
-      # Generate changelog (only on tag push)
-      - name: Ensure CHANGELOG.md exists
-        if: startsWith(github.ref, 'refs/tags/')
-        run: touch CHANGELOG.md
-
-      - name: Generate a changelog
-        uses: orhun/git-cliff-action@v2
-        id: git-cliff
-        if: startsWith(github.ref, 'refs/tags/')
-        with:
-          config: cliff.toml
-          args: -vv --latest --strip header --prepend=CHANGELOG.md
-
-      - name: Debug changelog
-        if: startsWith(github.ref, 'refs/tags/')
-        run: cat CHANGELOG.md
-
-      - name: Commit updated CHANGELOG.md
-        if: startsWith(github.ref, 'refs/tags/')
-        run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
-          git add CHANGELOG.md
-          git commit -m "Update CHANGELOG.md [skip ci]" || echo "Nothing to commit"
-          git push origin main || echo "Push failed"
-
-      # Create GitHub Release
-  #      - name: Release
-  #        uses: softprops/action-gh-release@v2
-  #        if: startsWith(github.ref, 'refs/tags/')
-  #        with:
-  #          body_path: ${{ github.workspace }}/CHANGELOG.md
-
   build-assets:
     needs: build-go  # 依赖 build-go，确保代码检查通过
     if: startsWith(github.ref, 'refs/tags/')  # 仅在 Tag 推送时运行
@@ -135,7 +102,7 @@ jobs:
 
       - name: Build executable
         run: |
-          GOOS=${{ matrix.target }} GOARCH=amd64 go build -o gogen-${{ matrix.target }}${{ matrix.ext }} -ldflags "-X main.GitCommit=$(git rev-parse --short HEAD)" ./main.go
+          GOOS=${{ matrix.target }} GOARCH=amd64 go build -o gogen-${{ matrix.target }}${{ matrix.ext }} -ldflags "-X main.GitCommit=$(git rev-parse --short HEAD)" .
           if [ "${{ matrix.os }}" != "windows-latest" ]; then chmod +x gogen-${{ matrix.target }}${{ matrix.ext }}; fi
         shell: bash
 

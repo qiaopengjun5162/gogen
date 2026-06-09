@@ -22,16 +22,17 @@ local path, while supporting basic template variable substitution.
 - Clone project templates from Git repositories (e.g., GitHub, GitLab).
 - Copy templates from local directories.
 - Specify a Git branch for cloning (optional).
-- Replace template variables (e.g., `{{project_name}}`) with user-provided values.
+- Replace template variables (e.g., `{{project_name}}`, `{{module}}`) with user-provided values.
 - Interactive CLI with ANSI-colored output and progress tracking.
-- Embedded Git commit hash for version tracking.
+- Non-interactive generation with explicit project names and confirmation skipping.
+- Version output with embedded Git commit metadata.
 
 ### Quick Start
 
 Clone a template and generate a project in one command:
 
 ```bash
-gogen --git=https://github.com/example/template
+gogen --git=https://github.com/example/template --name=myproject --yes
 ```
 
 ### Installation
@@ -39,18 +40,18 @@ gogen --git=https://github.com/example/template
 1. **Using Go**:
 
    ```bash
-   go install github.com/yourusername/gogen@latest
+   go install github.com/qiaopengjun5162/gogen@latest
    ```
 
 2. **Manual Build**:
 
    ```bash
-   git clone https://github.com/yourusername/gogen.git
+   git clone https://github.com/qiaopengjun5162/gogen.git
    cd gogen
-   go build -v -ldflags "-X main.GitCommit=$(git rev-parse --short HEAD)" -o gogen ./main.go
+   go build -v -ldflags "-X main.GitCommit=$(git rev-parse --short HEAD)" -o gogen .
    ```
 
-   This embeds the Git commit hash into the binary, visible when running the tool.
+   This embeds the Git commit hash into the binary, visible through `gogen --version`.
 
 ### Usage
 
@@ -66,7 +67,38 @@ Generate a project from a local template:
 gogen --local=/path/to/template
 ```
 
-Follow the interactive prompts to specify a project name (or accept the default derived from the template source).
+Generate without interactive prompts:
+
+```bash
+gogen --local=/path/to/template --name=myproject --yes
+```
+
+Pass custom template variables:
+
+```bash
+gogen --local=/path/to/template --name=myproject --var module=github.com/example/myproject --var license=MIT --yes
+```
+
+Print build information:
+
+```bash
+gogen --version
+```
+
+Options:
+
+| Flag | Description |
+| --- | --- |
+| `--git` | Git repository URL for the template. |
+| `--local` | Local template directory path. |
+| `--branch` | Git branch to clone; only valid with `--git`. |
+| `--name` | Project name and destination directory. |
+| `--var` | Template variable in `key=value` form; can be repeated. |
+| `--yes`, `-y` | Skip confirmation prompts. |
+| `--version` | Print version information and exit. |
+
+Without `--name`, `gogen` derives the default project name from the template source.
+`project_name` is reserved and always comes from the project name.
 
 ### Requirements
 
@@ -78,44 +110,11 @@ Follow the interactive prompts to specify a project name (or accept the default 
 Below is an example of running `gogen` with a Git repository:
 
 ```bash
-$ gogen --git=https://github.com/example/template
-[INFO] Built from Git commit: abc1234
+$ gogen --git=https://github.com/example/template --name=myproject --yes
 [INFO] Validating input...
-[INPUT] Enter project name (default: template): myproject
-[INPUT] Generate project 'myproject' from https://github.com/example/template? (Y/n): Y
+[INFO] Generating project 'myproject'...
 [PROGRESS] Cloning Git repository from 'https://github.com/example/template'...
 [SUCCESS] Project 'myproject' generated successfully!
-
-➜ gogen --git=https://github.com/qiaopengjun5162/gotcha
-[INFO] Validating input...
-[INPUT] Enter project name (default: gotcha):
-[INPUT] Generate project 'gotcha' from https://github.com/qiaopengjun5162/gotcha? (Y/n):
-[INFO] Generating project 'gotcha'...
-[PROGRESS] Cloning Git repository from 'https://github.com/qiaopengjun5162/gotcha'...
-正克隆到 'gotcha'...
-remote: Enumerating objects: 26, done.
-remote: Counting objects: 100% (26/26), done.
-remote: Compressing objects: 100% (22/22), done.
-remote: Total 26 (delta 1), reused 22 (delta 1), pack-reused 0 (from 0)
-接收对象中: 100% (26/26), 10.39 KiB | 5.20 MiB/s, 完成.
-处理 delta 中: 100% (1/1), 完成.
-[SUCCESS] Project 'gotcha' generated successfully!
-
-➜ gogen --git=https://github.com/qiaopengjun5162/gotcha
-[INFO] Validating input...
-[INPUT] Enter project name (default: gotcha): myproject
-[INPUT] Generate project 'myproject' from https://github.com/qiaopengjun5162/gotcha? (Y/n): y
-[INFO] Generating project 'myproject'...
-[PROGRESS] Cloning Git repository from 'https://github.com/qiaopengjun5162/gotcha'...
-正克隆到 'myproject'...
-remote: Enumerating objects: 26, done.
-remote: Counting objects: 100% (26/26), done.
-remote: Compressing objects: 100% (22/22), done.
-remote: Total 26 (delta 1), reused 22 (delta 1), pack-reused 0 (from 0)
-接收对象中: 100% (26/26), 10.39 KiB | 5.20 MiB/s, 完成.
-处理 delta 中: 100% (1/1), 完成.
-[SUCCESS] Project 'myproject' generated successfully!
-
 ```
 
 ### Project Structure
@@ -124,11 +123,19 @@ remote: Total 26 (delta 1), reused 22 (delta 1), pack-reused 0 (from 0)
 gogen/
 ├── CHANGELOG.md    # Version history
 ├── LICENSE         # Project license
-├── Makefile        # Build automation
+├── Makefile        # Compatibility wrapper for justfile
 ├── README.md       # This file
 ├── README.zh.md    # Chinese documentation
+├── config.go       # CLI configuration and validation patterns
+├── files.go        # Local template copy and variable replacement
+├── generator.go    # Project generation orchestration
 ├── go.mod          # Go module file
-├── main.go         # Main source file
+├── input.go        # Interactive prompt handling
+├── justfile        # Canonical development tasks
+├── main.go         # CLI entrypoint
+├── processor.go    # Git and local template processors
+├── logger.go       # CLI output helpers
+├── main_test.go    # Behavior tests
 ```
 
 ### Contributing

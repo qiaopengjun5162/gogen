@@ -2,6 +2,32 @@
 
 ## 2026-06-09
 
+### Main Branch Protection
+
+Changed:
+
+- Enabled GitHub branch protection for `main`.
+- Required status check:
+  - `build-go (ubuntu-latest)`
+- Enabled strict status checks so branches must be up to date before merge.
+- Required pull requests before merging.
+- Enabled stale review dismissal.
+- Enforced protection for admins.
+- Required linear history.
+- Required conversation resolution.
+- Disabled force pushes.
+- Disabled branch deletion.
+- Updated `PRODUCTION.md` with the durable branch protection expectations.
+
+Validation:
+
+- `gh api repos/qiaopengjun5162/gogen/branches/main/protection`
+
+Problems and resolutions:
+
+- Problem: GitHub showed `Your main branch isn't protected`, meaning production code could be force-pushed, deleted, or changed without required CI.
+  Resolution: Configured branch protection through GitHub API and recorded the expected settings in project documentation.
+
 ### Post-Merge Duplicate Implementation Cleanup
 
 Changed:

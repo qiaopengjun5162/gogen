@@ -140,6 +140,8 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           body_path: ${{ github.workspace }}/CHANGELOG.md
+          make_latest: true
+          fail_on_unmatched_files: true
           files: |
             artifacts/gogen-linux/gogen-linux
             artifacts/gogen-windows/gogen-windows.exe

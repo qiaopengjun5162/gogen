@@ -36,6 +36,7 @@
 - Local template copying intentionally skips `.git` directories.
 - Template variable replacement intentionally skips `.git` directories and binary files.
 - PR CI jobs must not reference tag-only container actions; GitHub can prepare container actions before evaluating step-level conditions.
+- Pushing a `v*` tag triggers `.github/workflows/build.yml` release jobs. Existing GitHub Release assets are overwritten by `softprops/action-gh-release@v2`; release notes come from `CHANGELOG.md`.
 - Keep tests focused on CLI behavior and filesystem effects before adding new features.
 
 ## Change Recording

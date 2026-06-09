@@ -39,6 +39,8 @@ Update these files when relevant:
 - Interactive prompts must have a non-interactive alternative when practical.
 - Error messages should identify the failed input or operation.
 - Template processing must avoid corrupting binary files or repository metadata.
+- `project_name` is a reserved template variable and must always come from the validated project name.
+- Custom template variables must use validated keys and structured `--var key=value` parsing.
 - Git operations should pass arguments as structured command arguments, never as shell-concatenated strings.
 - Generated project cleanup must leave no partial destination directory after failure.
 

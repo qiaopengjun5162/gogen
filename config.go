@@ -14,6 +14,7 @@ type Config struct {
 	TemplateSrc string
 	IsLocal     bool
 	Branch      string
+	Vars        map[string]string
 	Yes         bool
 	ShowVersion bool
 }
@@ -21,6 +22,7 @@ type Config struct {
 var (
 	validGitURL      = regexp.MustCompile(`^(https://|git@).+$`)
 	validProjectName = regexp.MustCompile(`^[a-zA-Z0-9_-]+$`)
+	validVariableKey = regexp.MustCompile(`^[a-zA-Z_][a-zA-Z0-9_]*$`)
 	repoNameExtract  = regexp.MustCompile(`([^/?]+?)(?:\.git)?(?:\?.*)?$`)
 	nameSanitizer    = regexp.MustCompile(`[^a-zA-Z0-9_-]`)
 )

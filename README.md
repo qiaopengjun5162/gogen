@@ -22,7 +22,7 @@ local path, while supporting basic template variable substitution.
 - Clone project templates from Git repositories (e.g., GitHub, GitLab).
 - Copy templates from local directories.
 - Specify a Git branch for cloning (optional).
-- Replace template variables (e.g., `{{project_name}}`) with user-provided values.
+- Replace template variables (e.g., `{{project_name}}`, `{{module}}`) with user-provided values.
 - Interactive CLI with ANSI-colored output and progress tracking.
 - Non-interactive generation with explicit project names and confirmation skipping.
 - Version output with embedded Git commit metadata.
@@ -73,6 +73,12 @@ Generate without interactive prompts:
 gogen --local=/path/to/template --name=myproject --yes
 ```
 
+Pass custom template variables:
+
+```bash
+gogen --local=/path/to/template --name=myproject --var module=github.com/example/myproject --var license=MIT --yes
+```
+
 Print build information:
 
 ```bash
@@ -87,10 +93,12 @@ Options:
 | `--local` | Local template directory path. |
 | `--branch` | Git branch to clone; only valid with `--git`. |
 | `--name` | Project name and destination directory. |
+| `--var` | Template variable in `key=value` form; can be repeated. |
 | `--yes`, `-y` | Skip confirmation prompts. |
 | `--version` | Print version information and exit. |
 
 Without `--name`, `gogen` derives the default project name from the template source.
+`project_name` is reserved and always comes from the project name.
 
 ### Requirements
 

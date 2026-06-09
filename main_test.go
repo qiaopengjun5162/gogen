@@ -36,6 +36,8 @@ func TestParseFlagsSupportsAutomationOptions(t *testing.T) {
 		"--git=https://github.com/qiaopengjun5162/gogen.git",
 		"--branch=main",
 		"--name=demo",
+		"--var=module=github.com/example/demo",
+		"--var=license=MIT",
 		"--yes",
 	})
 	if err != nil {
@@ -50,6 +52,12 @@ func TestParseFlagsSupportsAutomationOptions(t *testing.T) {
 	}
 	if config.Branch != "main" {
 		t.Fatalf("Branch = %q, want main", config.Branch)
+	}
+	if config.Vars["module"] != "github.com/example/demo" {
+		t.Fatalf("module var = %q", config.Vars["module"])
+	}
+	if config.Vars["license"] != "MIT" {
+		t.Fatalf("license var = %q", config.Vars["license"])
 	}
 }
 
@@ -70,6 +78,35 @@ func TestParseFlagsSupportsVersionWithoutTemplateSource(t *testing.T) {
 	}
 	if !config.ShowVersion {
 		t.Fatal("expected ShowVersion=true")
+	}
+}
+
+func TestParseFlagsRejectsInvalidVariables(t *testing.T) {
+	tests := []struct {
+		name string
+		args []string
+	}{
+		{
+			name: "missing assignment",
+			args: []string{"--git=https://github.com/example/template", "--var=module"},
+		},
+		{
+			name: "invalid key",
+			args: []string{"--git=https://github.com/example/template", "--var=module-name=value"},
+		},
+		{
+			name: "reserved project name",
+			args: []string{"--git=https://github.com/example/template", "--var=project_name=value"},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			_, err := parseFlags(tt.args)
+			if err == nil {
+				t.Fatal("expected error")
+			}
+		})
 	}
 }
 
@@ -114,6 +151,9 @@ func TestGenerateProjectFromLocalTemplate(t *testing.T) {
 	if err := os.WriteFile(filepath.Join(templateDir, "README.md"), []byte("name={{project_name}}\n"), 0644); err != nil {
 		t.Fatalf("write README: %v", err)
 	}
+	if err := os.WriteFile(filepath.Join(templateDir, "config.txt"), []byte("module={{module}}\nlicense={{license}}\nempty={{empty}}\n"), 0644); err != nil {
+		t.Fatalf("write config: %v", err)
+	}
 	if err := os.WriteFile(filepath.Join(templateDir, "cmd", "main.go"), []byte("package main\n"), 0644); err != nil {
 		t.Fatalf("write nested file: %v", err)
 	}
@@ -134,6 +174,11 @@ func TestGenerateProjectFromLocalTemplate(t *testing.T) {
 		ProjectName: "demo",
 		TemplateSrc: templateDir,
 		IsLocal:     true,
+		Vars: map[string]string{
+			"module":  "github.com/example/demo",
+			"license": "MIT",
+			"empty":   "",
+		},
 	}, &output)
 	if err != nil {
 		t.Fatalf("generateProject returned error: %v", err)
@@ -145,6 +190,14 @@ func TestGenerateProjectFromLocalTemplate(t *testing.T) {
 	}
 	if string(readme) != "name=demo\n" {
 		t.Fatalf("README content = %q", string(readme))
+	}
+	configFile, err := os.ReadFile(filepath.Join(workDir, "demo", "config.txt"))
+	if err != nil {
+		t.Fatalf("read generated config: %v", err)
+	}
+	wantConfig := "module=github.com/example/demo\nlicense=MIT\nempty=\n"
+	if string(configFile) != wantConfig {
+		t.Fatalf("config content = %q, want %q", string(configFile), wantConfig)
 	}
 
 	binary, err := os.ReadFile(filepath.Join(workDir, "demo", "binary.dat"))
@@ -158,7 +211,7 @@ func TestGenerateProjectFromLocalTemplate(t *testing.T) {
 	if _, err := os.Stat(filepath.Join(workDir, "demo", ".git")); !os.IsNotExist(err) {
 		t.Fatalf(".git directory should not be copied, stat error: %v", err)
 	}
-	if !strings.Contains(output.String(), "Copied 3/3 files") {
+	if !strings.Contains(output.String(), "Copied 4/4 files") {
 		t.Fatalf("progress output = %q", output.String())
 	}
 }

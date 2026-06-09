@@ -116,7 +116,7 @@ func replaceTemplateVariables(dir string, config Config) error {
 			return nil
 		}
 
-		newContent := strings.ReplaceAll(string(content), "{{project_name}}", config.ProjectName)
+		newContent := replaceVariables(string(content), config)
 		if newContent == string(content) {
 			return nil
 		}
@@ -144,4 +144,12 @@ func isBinary(content []byte) bool {
 
 func formatProgress(done, total int) string {
 	return strconv.Itoa(done) + "/" + strconv.Itoa(total)
+}
+
+func replaceVariables(content string, config Config) string {
+	replacements := []string{"{{project_name}}", config.ProjectName}
+	for key, value := range config.Vars {
+		replacements = append(replacements, "{{"+key+"}}", value)
+	}
+	return strings.NewReplacer(replacements...).Replace(content)
 }

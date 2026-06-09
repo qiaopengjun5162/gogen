@@ -27,6 +27,7 @@
 - Build the package with `go build .`, not `go build ./main.go`; the CLI is now modular.
 - `--local` must preserve the provided template path in `Config.TemplateSrc`.
 - `--name` sets `Config.ProjectName`; `--yes` and `-y` skip confirmation prompts.
+- `--var key=value` can be repeated for custom template variables; `project_name` is reserved.
 - `--version` must not require `--git` or `--local`.
 - Local template copying intentionally skips `.git` directories.
 - Template variable replacement intentionally skips `.git` directories and binary files.

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strings"
 )
 
 var (
@@ -59,6 +60,8 @@ func parseFlags(args []string) (Config, error) {
 	yes := flags.Bool("yes", false, "Skip confirmation prompts")
 	shortYes := flags.Bool("y", false, "Skip confirmation prompts")
 	version := flags.Bool("version", false, "Print version information")
+	var variables variableFlags
+	flags.Var(&variables, "var", "Template variable in key=value form; can be repeated")
 
 	if err := flags.Parse(args); err != nil {
 		return Config{}, err
@@ -75,6 +78,10 @@ func parseFlags(args []string) (Config, error) {
 	if *local != "" && *branch != "" {
 		return Config{}, fmt.Errorf("--branch can only be used with --git")
 	}
+	vars, err := variables.Map()
+	if err != nil {
+		return Config{}, err
+	}
 
 	source := *git
 	if *local != "" {
@@ -86,12 +93,13 @@ func parseFlags(args []string) (Config, error) {
 		TemplateSrc: source,
 		IsLocal:     *local != "",
 		Branch:      *branch,
+		Vars:        vars,
 		Yes:         *yes || *shortYes,
 	}, nil
 }
 
 func printUsage(output io.Writer) {
-	fmt.Fprintln(output, "Usage: gogen --git=<template-repo-url> | --local=<template-path> [--branch=<branch>] [--name=<project-name>] [--yes]")
+	fmt.Fprintln(output, "Usage: gogen --git=<template-repo-url> | --local=<template-path> [--branch=<branch>] [--name=<project-name>] [--var key=value] [--yes]")
 }
 
 func printVersion(output io.Writer) {
@@ -104,4 +112,38 @@ func printVersion(output io.Writer) {
 		date = "unknown"
 	}
 	fmt.Fprintf(output, "gogen\ncommit: %s\nbuild date: %s\n", commit, date)
+}
+
+type variableFlags []string
+
+func (v *variableFlags) String() string {
+	return strings.Join(*v, ",")
+}
+
+func (v *variableFlags) Set(value string) error {
+	*v = append(*v, value)
+	return nil
+}
+
+func (v variableFlags) Map() (map[string]string, error) {
+	if len(v) == 0 {
+		return nil, nil
+	}
+
+	vars := make(map[string]string, len(v))
+	for _, raw := range v {
+		key, value, ok := strings.Cut(raw, "=")
+		if !ok {
+			return nil, fmt.Errorf("invalid --var %q: expected key=value", raw)
+		}
+		if key == "project_name" {
+			return nil, fmt.Errorf("invalid --var %q: project_name is reserved", raw)
+		}
+		if !validVariableKey.MatchString(key) {
+			return nil, fmt.Errorf("invalid --var key %q: use letters, numbers, and underscores; first character must be a letter or underscore", key)
+		}
+		vars[key] = value
+	}
+
+	return vars, nil
 }

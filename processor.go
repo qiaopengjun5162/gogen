@@ -42,5 +42,5 @@ func (p *LocalTemplateProcessor) Process(src, dest string, config Config, output
 	}
 
 	logProgress(output, fmt.Sprintf("Copying local template from '%s'...", src))
-	return copyDir(src, dest, output)
+	return copyDir(src, dest, config, output)
 }

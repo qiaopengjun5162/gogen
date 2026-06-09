@@ -157,6 +157,12 @@ func TestGenerateProjectFromLocalTemplate(t *testing.T) {
 	if err := os.WriteFile(filepath.Join(templateDir, "cmd", "main.go"), []byte("package main\n"), 0644); err != nil {
 		t.Fatalf("write nested file: %v", err)
 	}
+	if err := os.MkdirAll(filepath.Join(templateDir, "{{project_name}}"), 0750); err != nil {
+		t.Fatalf("create templated project dir: %v", err)
+	}
+	if err := os.WriteFile(filepath.Join(templateDir, "{{project_name}}", "{{module_name}}.txt"), []byte("path={{project_name}}/{{module_name}}\n"), 0644); err != nil {
+		t.Fatalf("write templated path file: %v", err)
+	}
 	if err := os.WriteFile(filepath.Join(templateDir, "binary.dat"), []byte{'h', 0, '{', '{', 'p'}, 0644); err != nil {
 		t.Fatalf("write binary file: %v", err)
 	}
@@ -175,9 +181,10 @@ func TestGenerateProjectFromLocalTemplate(t *testing.T) {
 		TemplateSrc: templateDir,
 		IsLocal:     true,
 		Vars: map[string]string{
-			"module":  "github.com/example/demo",
-			"license": "MIT",
-			"empty":   "",
+			"module":      "github.com/example/demo",
+			"module_name": "demo_module",
+			"license":     "MIT",
+			"empty":       "",
 		},
 	}, &output)
 	if err != nil {
@@ -199,6 +206,13 @@ func TestGenerateProjectFromLocalTemplate(t *testing.T) {
 	if string(configFile) != wantConfig {
 		t.Fatalf("config content = %q, want %q", string(configFile), wantConfig)
 	}
+	pathFile, err := os.ReadFile(filepath.Join(workDir, "demo", "demo", "demo_module.txt"))
+	if err != nil {
+		t.Fatalf("read generated templated path file: %v", err)
+	}
+	if string(pathFile) != "path=demo/demo_module\n" {
+		t.Fatalf("templated path file content = %q", string(pathFile))
+	}
 
 	binary, err := os.ReadFile(filepath.Join(workDir, "demo", "binary.dat"))
 	if err != nil {
@@ -211,8 +225,39 @@ func TestGenerateProjectFromLocalTemplate(t *testing.T) {
 	if _, err := os.Stat(filepath.Join(workDir, "demo", ".git")); !os.IsNotExist(err) {
 		t.Fatalf(".git directory should not be copied, stat error: %v", err)
 	}
-	if !strings.Contains(output.String(), "Copied 4/4 files") {
+	if !strings.Contains(output.String(), "Copied 5/5 files") {
 		t.Fatalf("progress output = %q", output.String())
+	}
+}
+
+func TestGenerateProjectRejectsTemplatePathCollisions(t *testing.T) {
+	workDir := t.TempDir()
+	templateDir := filepath.Join(workDir, "template")
+	if err := os.MkdirAll(templateDir, 0750); err != nil {
+		t.Fatalf("create template dir: %v", err)
+	}
+	if err := os.WriteFile(filepath.Join(templateDir, "{{project_name}}.txt"), []byte("first"), 0644); err != nil {
+		t.Fatalf("write first file: %v", err)
+	}
+	if err := os.WriteFile(filepath.Join(templateDir, "demo.txt"), []byte("second"), 0644); err != nil {
+		t.Fatalf("write second file: %v", err)
+	}
+
+	t.Chdir(workDir)
+
+	err := generateProject(Config{
+		ProjectName: "demo",
+		TemplateSrc: templateDir,
+		IsLocal:     true,
+	}, &bytes.Buffer{})
+	if err == nil {
+		t.Fatal("expected path collision error")
+	}
+	if !strings.Contains(err.Error(), "both resolve") {
+		t.Fatalf("error = %v", err)
+	}
+	if _, statErr := os.Stat(filepath.Join(workDir, "demo")); !os.IsNotExist(statErr) {
+		t.Fatalf("partial generated directory should be cleaned up, stat error: %v", statErr)
 	}
 }
 

@@ -38,6 +38,7 @@ Update these files when relevant:
 - Template processing must avoid corrupting binary files or repository metadata.
 - `project_name` is a reserved template variable and must always come from the validated project name.
 - Custom template variables must use validated keys and structured `--var key=value` parsing.
+- Template variable replacement applies to file contents and template paths; path collisions must fail and clean up partial output.
 - Git operations should pass arguments as structured command arguments, never as shell-concatenated strings.
 - Generated project cleanup must leave no partial destination directory after failure.
 

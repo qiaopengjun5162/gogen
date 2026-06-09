@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"io"
 	"os"
 	"path/filepath"
@@ -8,13 +9,14 @@ import (
 	"strings"
 )
 
-func copyDir(src, dest string, output io.Writer) error {
+func copyDir(src, dest string, config Config, output io.Writer) error {
 	totalFiles, err := countFiles(src)
 	if err != nil {
 		return err
 	}
 
 	var copiedFiles int
+	targets := make(map[string]string)
 	return filepath.WalkDir(src, func(path string, entry os.DirEntry, err error) error {
 		if err != nil {
 			return err
@@ -31,10 +33,13 @@ func copyDir(src, dest string, output io.Writer) error {
 			return filepath.SkipDir
 		}
 
-		targetPath := filepath.Join(dest, relPath)
+		targetPath := filepath.Join(dest, replacePathVariables(relPath, config))
 		if entry.IsDir() {
 			info, err := entry.Info()
 			if err != nil {
+				return err
+			}
+			if err := rememberTarget(targets, path, targetPath); err != nil {
 				return err
 			}
 			return os.MkdirAll(targetPath, info.Mode().Perm())
@@ -42,6 +47,9 @@ func copyDir(src, dest string, output io.Writer) error {
 
 		info, err := entry.Info()
 		if err != nil {
+			return err
+		}
+		if err := rememberTarget(targets, path, targetPath); err != nil {
 			return err
 		}
 		if err := copyFile(path, targetPath, info.Mode()); err != nil {
@@ -152,4 +160,21 @@ func replaceVariables(content string, config Config) string {
 		replacements = append(replacements, "{{"+key+"}}", value)
 	}
 	return strings.NewReplacer(replacements...).Replace(content)
+}
+
+func replacePathVariables(path string, config Config) string {
+	parts := strings.Split(filepath.ToSlash(path), "/")
+	for index, part := range parts {
+		parts[index] = replaceVariables(part, config)
+	}
+	return filepath.FromSlash(strings.Join(parts, "/"))
+}
+
+func rememberTarget(targets map[string]string, sourcePath, targetPath string) error {
+	cleanTarget := filepath.Clean(targetPath)
+	if existingSource, exists := targets[cleanTarget]; exists {
+		return fmt.Errorf("template paths %q and %q both resolve to %q", existingSource, sourcePath, cleanTarget)
+	}
+	targets[cleanTarget] = sourcePath
+	return nil
 }

@@ -7,10 +7,7 @@
 Run these before committing code changes:
 
 ```bash
-gofmt -w *.go
-GOCACHE=/private/tmp/gogen-go-cache GOMODCACHE=/private/tmp/gogen-go-mod-cache go test ./...
-GOCACHE=/private/tmp/gogen-go-cache GOMODCACHE=/private/tmp/gogen-go-mod-cache go vet ./...
-GOCACHE=/private/tmp/gogen-go-cache GOMODCACHE=/private/tmp/gogen-go-mod-cache go build ./...
+make check
 ```
 
 For CLI behavior changes, also run a real binary smoke test:
@@ -43,6 +40,14 @@ Update these files when relevant:
 - Custom template variables must use validated keys and structured `--var key=value` parsing.
 - Git operations should pass arguments as structured command arguments, never as shell-concatenated strings.
 - Generated project cleanup must leave no partial destination directory after failure.
+
+## Code Review Standards
+
+- Review each change for correctness, error handling, test coverage, user-facing documentation, and release/build impact before committing.
+- Prefer targeted refactors that remove duplication or clarify ownership boundaries.
+- Do not merge behavior changes that only pass manual smoke tests when they can reasonably be covered by automated tests.
+- Keep command construction structured and filesystem writes explicit.
+- Treat documentation drift as a product defect.
 
 ## Repository Hygiene
 

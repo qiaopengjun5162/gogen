@@ -9,6 +9,7 @@
 ## Commands
 
 - Format: `gofmt -w *.go`
+- Check: `make check`
 - Test: `GOCACHE=/private/tmp/gogen-go-cache GOMODCACHE=/private/tmp/gogen-go-mod-cache go test ./...`
 - Build: `GOCACHE=/private/tmp/gogen-go-cache GOMODCACHE=/private/tmp/gogen-go-mod-cache go build ./...`
 - Release-style build: `go build -v -ldflags "-X main.GitCommit=$(git rev-parse --short HEAD)" -o gogen .`
@@ -17,6 +18,7 @@
 
 - Treat `gogen` as a production CLI, not a demo or throwaway scaffold.
 - Every behavior change must have tests or a recorded reason why automated coverage is not practical.
+- Review changes for correctness, error handling, test coverage, documentation drift, and build/release impact before committing.
 - Any user-facing flag, output, error message, build command, release workflow, or template-processing behavior must be reflected in `README.md`, `README.zh.md`, `DEVLOG.md`, and `PRODUCTION.md` when relevant.
 - Prefer small, complete changes that can be formatted, tested, committed, and pushed in the same session.
 - Do not leave known broken workflows undocumented. If a local tool is missing, record the exact blocker and the manual verification used instead.

@@ -15,25 +15,35 @@ GITDATE := $(shell git show -s --format='%ct' 2>/dev/null || echo "1970-01-01 00
 # 构造链接器标志
 LDFLAGS := -ldflags "-X main.GitCommit=$(GITCOMMIT) -X main.GitDate=$(GITDATE)"
 PROJECT_NAME := $(shell go list -m | awk -F/ '{print $$NF}' || echo "gogen")
+GOCACHE ?= /private/tmp/gogen-go-cache
+GOMODCACHE ?= /private/tmp/gogen-go-mod-cache
+GO_ENV := GOCACHE=$(GOCACHE) GOMODCACHE=$(GOMODCACHE)
 
 # 整理 Go 模块依赖
 tidy:
 	$(ECHO) "$(COLOR_CYAN)Tidying Go modules...$(COLOR_RESET)"
-	go mod tidy
+	$(GO_ENV) go mod tidy
 	$(ECHO) "$(COLOR_GREEN)Tidy completed$(COLOR_RESET)"
 
 # 编译 gogen 程序，嵌入 Git 提交信息
 gogen: tidy
-	go build -v $(LDFLAGS) -o $(PROJECT_NAME) .
+	$(GO_ENV) go build -v $(LDFLAGS) -o $(PROJECT_NAME) .
 
 # 清理生成的文件和 Go 缓存
 clean:
 	rm -f gogen
-	go clean -cache -testcache
+	$(GO_ENV) go clean -cache -testcache
 
 # 运行所有测试
 test: tidy
-	go test -v ./...
+	$(GO_ENV) go test -v ./...
+
+# 生产级质量门禁
+check:
+	gofmt -w *.go
+	$(GO_ENV) go test ./...
+	$(GO_ENV) go vet ./...
+	$(GO_ENV) go build ./...
 
 # 检查代码风格和潜在问题
 lint: tidy
@@ -50,9 +60,10 @@ help:
 	$(ECHO) "  gogen    : Build the gogen binary with Git info"
 	$(ECHO) "  clean    : Remove generated files and caches"
 	$(ECHO) "  test     : Run all tests with coverage"
+	$(ECHO) "  check    : Run format, tests, vet, and build"
 	$(ECHO) "  lint     : Check code style and issues"
 	$(ECHO) "  proto    : Compile protocol files"
 	$(ECHO) "  tidy     : Tidy Go module dependencies"
 	$(ECHO) "  help     : Show this help message"
 
-.PHONY: gogen clean test lint proto tidy
+.PHONY: gogen clean test check lint proto tidy

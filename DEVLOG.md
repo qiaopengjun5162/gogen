@@ -2,6 +2,25 @@
 
 ## 2026-06-09
 
+### Production Quality Gate
+
+Changed:
+
+- Added `make check` as the single production gate for formatting, tests, vet, and build.
+- Added reusable `GOCACHE` and `GOMODCACHE` defaults in `Makefile` so project commands do not rely on home-directory Go caches.
+- Updated `PRODUCTION.md` to use `make check` as the required gate.
+- Added code review standards to `PRODUCTION.md`.
+- Updated `AGENTS.md` to require reviewing correctness, error handling, tests, documentation drift, and build/release impact before commit.
+
+Validation:
+
+- `make check`
+
+Problems and resolutions:
+
+- Problem: The production gate existed as several manually copied commands, which increases the chance of skipping one during repeated work.
+  Resolution: Added `make check` as the canonical local gate.
+
 ### Custom Template Variables
 
 Changed:

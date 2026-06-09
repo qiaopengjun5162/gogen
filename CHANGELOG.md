@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file. See [conven
 
 ### Features
 
+- modularize the CLI and add non-interactive generation flags
 - gogen project finished - ([95041ad](https://github.com/qiaopengjun5162/gogen/commit/95041adb4bb0dbae7520dc9e799c38342af0df21)) - QiaoPengjun5162
 
 ### Miscellaneous Chores

@@ -24,7 +24,7 @@ tidy:
 
 # 编译 gogen 程序，嵌入 Git 提交信息
 gogen: tidy
-	go build -v $(LDFLAGS) -o $(PROJECT_NAME) ./main.go
+	go build -v $(LDFLAGS) -o $(PROJECT_NAME) .
 
 # 清理生成的文件和 Go 缓存
 clean:

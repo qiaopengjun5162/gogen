@@ -135,7 +135,7 @@ jobs:
 
       - name: Build executable
         run: |
-          GOOS=${{ matrix.target }} GOARCH=amd64 go build -o gogen-${{ matrix.target }}${{ matrix.ext }} -ldflags "-X main.GitCommit=$(git rev-parse --short HEAD)" ./main.go
+          GOOS=${{ matrix.target }} GOARCH=amd64 go build -o gogen-${{ matrix.target }}${{ matrix.ext }} -ldflags "-X main.GitCommit=$(git rev-parse --short HEAD)" .
           if [ "${{ matrix.os }}" != "windows-latest" ]; then chmod +x gogen-${{ matrix.target }}${{ matrix.ext }}; fi
         shell: bash
 

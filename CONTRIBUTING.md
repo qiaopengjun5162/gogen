@@ -5,7 +5,7 @@ feature requests, and code contributions.
 
 ## Reporting Issues
 
-1. Check the [Issues](https://github.com/yourusername/gogen/issues) page to see if your issue has already been reported.
+1. Check the [Issues](https://github.com/qiaopengjun5162/gogen/issues) page to see if your issue has already been reported.
 2. If not, create a new issue with:
     - A clear title and description.
     - Steps to reproduce the problem (if applicable).
@@ -21,7 +21,7 @@ feature requests, and code contributions.
 
 1. **Fork the Repository**:
    ```bash
-   git clone https://github.com/yourusername/gogen.git
+   git clone https://github.com/qiaopengjun5162/gogen.git
    cd gogen
    ```
 2. **Create a Branch**:
@@ -34,7 +34,7 @@ feature requests, and code contributions.
     - Update `CHANGELOG.md` with your changes under an `[Unreleased]` section.
 4. **Test Your Changes**:
    ```bash
-   go build -v -ldflags "-X main.GitCommit=$(git rev-parse --short HEAD)" -o gogen ./main.go
+   go build -v -ldflags "-X main.GitCommit=$(git rev-parse --short HEAD)" -o gogen .
    ./gogen --git=https://github.com/example/template
    ```
 5. **Commit and Push**:

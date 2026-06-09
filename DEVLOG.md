@@ -2,6 +2,21 @@
 
 ## 2026-06-09
 
+### Post-Merge Duplicate Implementation Cleanup
+
+Changed:
+
+- Removed the stale `gogen_split/` duplicate implementation from `main` after PR #3 was merged.
+
+Validation:
+
+- `just check`
+
+Problems and resolutions:
+
+- Problem: After PR #3 was squash-merged, `main` still contained the old `gogen_split/` implementation even though the production rule says the root package must be the only implementation.
+  Resolution: Deleted `gogen_split/` on `main` and kept the modular root package as the single source of truth.
+
 ### PR Workflow CI Fix
 
 Changed:

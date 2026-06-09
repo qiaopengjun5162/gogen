@@ -2,6 +2,25 @@
 
 ## 2026-06-09
 
+### v0.1.1 Release Refresh
+
+Changed:
+
+- Planned refresh for GitHub release `v0.1.1-gogen-release` after production-readiness work.
+- Release tag should point to the latest protected `main` commit after this record is merged.
+- Release assets should be rebuilt for Linux, macOS, and Windows.
+- Release should remain marked as Latest.
+
+Validation:
+
+- `just check`
+- `gh release view v0.1.1-gogen-release`
+
+Problems and resolutions:
+
+- Problem: Existing `v0.1.1-gogen-release` was marked Latest but its tag pointed to old commit `2c084e4`, not current protected `main`.
+  Resolution: Record the release refresh, then retarget the tag and update release assets after this record lands on `main`.
+
 ### Template Path Variables
 
 Changed:

@@ -7,6 +7,7 @@ const (
 	colorRed   = "\033[31m"
 	colorGreen = "\033[32m"
 	colorCyan  = "\033[36m"
+	gitDirName = ".git"
 )
 
 type Config struct {

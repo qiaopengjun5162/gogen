@@ -6,21 +6,21 @@ import (
 )
 
 func logInfo(output io.Writer, msg string) {
-	fmt.Fprintf(output, "%s[INFO] %s%s\n", colorCyan, msg, colorReset)
+	_, _ = fmt.Fprintf(output, "%s[INFO] %s%s\n", colorCyan, msg, colorReset)
 }
 
 func logInput(output io.Writer, msg string) {
-	fmt.Fprintf(output, "%s[INPUT] %s%s", colorCyan, msg, colorReset)
+	_, _ = fmt.Fprintf(output, "%s[INPUT] %s%s", colorCyan, msg, colorReset)
 }
 
 func logProgress(output io.Writer, msg string) {
-	fmt.Fprintf(output, "%s[PROGRESS] %s%s\n", colorCyan, msg, colorReset)
+	_, _ = fmt.Fprintf(output, "%s[PROGRESS] %s%s\n", colorCyan, msg, colorReset)
 }
 
 func logSuccess(output io.Writer, msg string) {
-	fmt.Fprintf(output, "%s[SUCCESS] %s%s\n", colorGreen, msg, colorReset)
+	_, _ = fmt.Fprintf(output, "%s[SUCCESS] %s%s\n", colorGreen, msg, colorReset)
 }
 
 func logError(output io.Writer, err error) {
-	fmt.Fprintf(output, "%s[ERROR] %v%s\n", colorRed, err, colorReset)
+	_, _ = fmt.Fprintf(output, "%s[ERROR] %v%s\n", colorRed, err, colorReset)
 }

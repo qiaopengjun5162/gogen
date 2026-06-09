@@ -27,7 +27,7 @@ func copyDir(src, dest string, output io.Writer) error {
 		if relPath == "." {
 			return os.MkdirAll(dest, 0750)
 		}
-		if entry.IsDir() && entry.Name() == ".git" {
+		if entry.IsDir() && entry.Name() == gitDirName {
 			return filepath.SkipDir
 		}
 
@@ -60,7 +60,7 @@ func countFiles(dir string) (int, error) {
 		if err != nil {
 			return err
 		}
-		if entry.IsDir() && entry.Name() == ".git" {
+		if entry.IsDir() && entry.Name() == gitDirName {
 			return filepath.SkipDir
 		}
 		if !entry.IsDir() {
@@ -102,7 +102,7 @@ func replaceTemplateVariables(dir string, config Config) error {
 			return err
 		}
 		if entry.IsDir() {
-			if entry.Name() == ".git" {
+			if entry.Name() == gitDirName {
 				return filepath.SkipDir
 			}
 			return nil

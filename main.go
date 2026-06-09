@@ -99,7 +99,7 @@ func parseFlags(args []string) (Config, error) {
 }
 
 func printUsage(output io.Writer) {
-	fmt.Fprintln(output, "Usage: gogen --git=<template-repo-url> | --local=<template-path> [--branch=<branch>] [--name=<project-name>] [--var key=value] [--yes]")
+	_, _ = fmt.Fprintln(output, "Usage: gogen --git=<template-repo-url> | --local=<template-path> [--branch=<branch>] [--name=<project-name>] [--var key=value] [--yes]")
 }
 
 func printVersion(output io.Writer) {
@@ -111,7 +111,7 @@ func printVersion(output io.Writer) {
 	if date == "" {
 		date = "unknown"
 	}
-	fmt.Fprintf(output, "gogen\ncommit: %s\nbuild date: %s\n", commit, date)
+	_, _ = fmt.Fprintf(output, "gogen\ncommit: %s\nbuild date: %s\n", commit, date)
 }
 
 type variableFlags []string

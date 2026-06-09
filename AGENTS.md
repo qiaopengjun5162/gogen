@@ -9,7 +9,7 @@
 ## Commands
 
 - Format: `gofmt -w *.go`
-- Check: `make check`
+- Check: `just check`
 - Test: `GOCACHE=/private/tmp/gogen-go-cache GOMODCACHE=/private/tmp/gogen-go-mod-cache go test ./...`
 - Build: `GOCACHE=/private/tmp/gogen-go-cache GOMODCACHE=/private/tmp/gogen-go-mod-cache go build ./...`
 - Release-style build: `go build -v -ldflags "-X main.GitCommit=$(git rev-parse --short HEAD)" -o gogen .`
@@ -27,6 +27,7 @@
 ## Implementation Notes
 
 - Build the package with `go build .`, not `go build ./main.go`; the CLI is now modular.
+- `justfile` is the canonical developer task entrypoint; keep `Makefile` as a thin compatibility wrapper only.
 - `--local` must preserve the provided template path in `Config.TemplateSrc`.
 - `--name` sets `Config.ProjectName`; `--yes` and `-y` skip confirmation prompts.
 - `--var key=value` can be repeated for custom template variables; `project_name` is reserved.

@@ -111,7 +111,7 @@ $ gogen --git=https://github.com/example/template --name=myproject --yes
 gogen/
 ├── CHANGELOG.md    # 版本历史
 ├── LICENSE         # 项目许可证
-├── Makefile        # 构建自动化
+├── Makefile        # justfile 的兼容包装入口
 ├── README.md       # 英文文档
 ├── README.zh.md    # 本文件（中文文档）
 ├── config.go       # CLI 配置和校验规则
@@ -119,6 +119,7 @@ gogen/
 ├── generator.go    # 项目生成编排
 ├── go.mod          # Go 模块文件
 ├── input.go        # 交互式输入处理
+├── justfile        # 标准开发任务入口
 ├── main.go         # CLI 入口
 ├── processor.go    # Git 和本地模板处理器
 ├── logger.go       # CLI 输出辅助函数

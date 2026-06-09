@@ -123,7 +123,7 @@ $ gogen --git=https://github.com/example/template --name=myproject --yes
 gogen/
 ├── CHANGELOG.md    # Version history
 ├── LICENSE         # Project license
-├── Makefile        # Build automation
+├── Makefile        # Compatibility wrapper for justfile
 ├── README.md       # This file
 ├── README.zh.md    # Chinese documentation
 ├── config.go       # CLI configuration and validation patterns
@@ -131,6 +131,7 @@ gogen/
 ├── generator.go    # Project generation orchestration
 ├── go.mod          # Go module file
 ├── input.go        # Interactive prompt handling
+├── justfile        # Canonical development tasks
 ├── main.go         # CLI entrypoint
 ├── processor.go    # Git and local template processors
 ├── logger.go       # CLI output helpers

@@ -2,6 +2,25 @@
 
 ## 2026-06-09
 
+### Justfile Task Runner
+
+Changed:
+
+- Added `justfile` as the canonical developer task runner.
+- Moved the quality gate to `just check`.
+- Kept `Makefile` as a thin compatibility wrapper that delegates to `just`.
+- Updated `AGENTS.md` and `PRODUCTION.md` so future work uses `justfile` as the source of truth for local tasks.
+
+Validation:
+
+- `just check`
+- `make check`
+
+Problems and resolutions:
+
+- Problem: `Makefile` works, but it is more awkward as a long-term developer command interface for a focused CLI project.
+  Resolution: Added `justfile` for clearer tasks while preserving `make` compatibility.
+
 ### Production Quality Gate
 
 Changed:

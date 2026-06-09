@@ -7,7 +7,7 @@
 Run these before committing code changes:
 
 ```bash
-make check
+just check
 ```
 
 For CLI behavior changes, also run a real binary smoke test:
@@ -28,7 +28,7 @@ Update these files when relevant:
 - `CHANGELOG.md` for unreleased user-visible changes.
 - `DEVLOG.md` for concrete work records, validation, blockers, and resolutions.
 - `AGENTS.md` for durable project rules or non-obvious implementation constraints.
-- `.github/workflows/build.yml`, `Makefile`, or `.pre-commit-config.yaml` when commands or release flow change.
+- `.github/workflows/build.yml`, `justfile`, `Makefile`, or `.pre-commit-config.yaml` when commands or release flow change.
 
 ## Behavior Standards
 
@@ -53,6 +53,7 @@ Update these files when relevant:
 
 - Keep generated binaries ignored and out of commits.
 - Do not keep duplicate implementations of the same CLI behavior.
+- Keep `justfile` as the canonical local task runner; `Makefile` is a compatibility wrapper.
 - Commit only coherent, reviewable changes.
 - Push completed commits when the user asks to continue shared work on the remote branch.
 - If `--no-verify` is necessary, record the hook failure and manual checks in `DEVLOG.md`.
